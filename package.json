@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon ejs js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -13,8 +13,13 @@
     "body": "^5.1.0",
     "ejs": "^3.1.9",
     "express": "^4.18.2",
+    "jest": "^29.7.0",
     "nodemon": "^3.0.2",
     "parser": "^0.1.4",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "pg": "^8.11.3",
+    "sequelize": "^6.35.2",
+    "sequelize-cli": "^6.6.2",
+    "supertest": "^6.3.4"
   }
 }
