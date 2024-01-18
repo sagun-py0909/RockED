@@ -13,8 +13,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       creatorId: {
-        type: Sequelize.INTEGER
-      },
+        type: Sequelize.INTEGER,
+        
+      },  
       description: {
         type: Sequelize.STRING
       },

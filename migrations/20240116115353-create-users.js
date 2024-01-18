@@ -5,6 +5,7 @@ const { ForeignKeyConstraintError } = require('sequelize');
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
+    
     await queryInterface.createTable('Users', {
       id: {
         allowNull: false,
@@ -43,7 +44,16 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+    queryInterface.addConstraint('Courses' , {
+      fields:['creatorId'],
+      type:'foreign key',
+      references:{
+        table:'users',
+        field:'id'
+      }
+    })
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');
   }
