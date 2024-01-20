@@ -1,9 +1,10 @@
 const express = require("express");
 const sequelize = require("sequelize");
-const { Users, Course } = require("./models");
+const { users, course } = require("./models");
 const path = require("path");
 const bodyparser = require("body-parser");
 const internal = require("stream");
+const { errorMonitor } = require("events");
 const app = express();
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -26,26 +27,47 @@ app.get("/signup", (request, response) => {
   }
 });
 
-app.post("/user-login", (request, response) => {
-  let { userName, password } = request.body;
-  console.log(userName);
-  console.log(password);
-  response.redirect(`/user-home-page?userName=${encodeURIComponent(userName)}`);
+app.post("/user-login", async (request, response) => {
+  try {
+    let { userName, password } = request.body;
+    const userData = await users.findOne({
+      where: {
+        username: userName,
+        password: password,
+      },
+    });
+    if (userData) {
+      console.log(userData);
+      response.redirect(
+        `/user-home-page?userName=${encodeURIComponent(userData.userName)}`
+      );
+    } else {
+      console.log("not found");
+      response.redirect("/login");
+    }
+  } catch (error) {
+    console.log(error);
+  }
 });
 //post request success
 app.post("/user-signup", async (request, response) => {
   let { firstName, lastName, userName, email, password } = request.body;
   try {
-    const data = await Users.create({
+    const data = await users.create({
       firstName: firstName,
       lastName: lastName,
-      userName: userName,
+      username: userName,
       email: email,
       password: password,
     });
-    if (data) {
-      response.status(200);
-      response.json(data);
+    if (userData) {
+      console.log(userData);
+      response.redirect(
+        `/user-home-page?userName=${encodeURIComponent(userData.username)}`
+      );
+    } else {
+      console.log("not found");
+      response.status(401).send("Invalid username or password");
     }
   } catch (error) {
     console.log(error);
@@ -55,29 +77,27 @@ app.post("/user-signup", async (request, response) => {
 app.get("/user-home-page", async (request, response) => {
   const userName = request.query.userName;
   try {
-    const data = await Course.findAll();
-    if(data){
-      response.render("user-home-page", { userName,  data});
+    const data = await course.findAll();
+    if (data) {
+      response.render("user-home-page", { userName, data });
     }
   } catch (error) {
-    response.status(403)
-    console.log(error)
+    response.status(403);
+    console.log(error);
   }
 });
 app.get("/user-profile", (request, response) => {
   // should add the athentication to dbms for the data.
   const userName = "something untill i get the dbms";
-  const properties = { phone: "8237593589", email: "sagunvarm@fgil.com" }; //use Users.findAll method to reqtrieve the data from database
+  const properties = { phone: "8237593589", email: "sagunvarm@fgil.com" }; //use users.findAll method to reqtrieve the data from database
   console.log(userName);
   response.render("user-profile", { userName, properties });
 });
-app.get("/courses" , async (request , response)=>{
-  
-})
+app.get("/courses", async (request, response) => {});
 app.post("/create-course", async (request, response) => {
   let { name, creatorId, description } = request.body;
   try {
-    const course = await Course.create({
+    const course = await course.create({
       name: name,
       creatorId: creatorId,
       description: description,
@@ -94,7 +114,7 @@ app.delete("/courses/:id", async (request, response) => {
   const courseId = request.params.id;
 
   try {
-    const data = await Course.destroy({
+    const data = await course.destroy({
       where: {
         id: courseId,
         creatorId: creatorId,

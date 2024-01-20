@@ -1,22 +1,13 @@
 'use strict';
-
-const { ForeignKeyConstraintError } = require('sequelize');
-
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    
-    await queryInterface.createTable('Users', {
+    await queryInterface.createTable('users', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
-      },
-      userName: {
-        type: Sequelize.STRING,
-        unique:true,
-        allowNull:false
       },
       firstName: {
         type: Sequelize.STRING,
@@ -24,16 +15,32 @@ module.exports = {
       },
       lastName: {
         type: Sequelize.STRING,
+
       },
       email: {
         type: Sequelize.STRING,
+        allowNull:false,
+        unique:true
+      },
+      username: {
+        type: Sequelize.STRING,
         allowNull:false
+      },
+      password: {
+        type: Sequelize.STRING,
+        allowNull:false
+      },
+      age: {
+        type: Sequelize.INTEGER
+      },
+      gender: {
+        type: Sequelize.STRING
       },
       phone: {
         type: Sequelize.STRING
       },
-      age: {
-        type: Sequelize.INTEGER
+      address: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -44,17 +51,8 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
-    queryInterface.addConstraint('Courses' , {
-      fields:['creatorId'],
-      type:'foreign key',
-      references:{
-        table:'users',
-        field:'id'
-      }
-    })
   },
-
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('users');
   }
 };

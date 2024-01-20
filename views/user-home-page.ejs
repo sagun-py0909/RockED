@@ -219,7 +219,7 @@
     </nav>
   </div>
   <div class="main-body">
-    <h1 class="mt-5">Welcome user</h1>
+    <h1 class="mt-5">Welcome <%= userName %></h1>
     <div class="divider"></div>
     <h4>On going Courses</h4>
 
@@ -253,7 +253,7 @@
       const enrollCard = document.getElementById('enrollCard');
       enrollButton.forEach(button => {
         button.addEventListener('click', () => {
-          enrollCard.style.display = 'block';
+          enrollCard.style.display = 'block'; 
         });
       });
       const cancelButton = document.querySelector('.cancell');
